@@ -29950,13 +29950,12 @@ SysTime parseRFC822DateTime(R)(R value) @safe
        (is(Unqual!(ElementType!R) == char) || is(Unqual!(ElementType!R) == ubyte)))
 {
     value = _stripCFWS(value);
-    void checkLen(string minStr)(size_t line = __LINE__)
+    void checkLen(size_t minLen, size_t line = __LINE__)
     {
-        enum minLen = minStr.length;
         if(value.length < minLen)
             throw new DateTimeException("date-time value too short", __FILE__, line);
     }
-    checkLen!"7Dec1200:00A"();
+    checkLen("7Dec1200:00A".length);
 
     static if(isArray!R && (is(ElementEncodingType!R == char) || is(ElementEncodingType!R == ubyte)))
     {
@@ -29992,11 +29991,11 @@ SysTime parseRFC822DateTime(R)(R value) @safe
             default: throw new DateTimeException(format("Invalid day-of-week: %s", dowStr));
         }
 afterDoW: value = _stripCFWS(value[3 .. value.length]);
-        checkLen!",7Dec1200:00A"();
+        checkLen(",7Dec1200:00A".length);
         if(value[0] != ',')
             throw new DateTimeException("day-of-week missing comma");
         value = _stripCFWS(value[1 .. value.length]);
-        checkLen!"7Dec1200:00A"();
+        checkLen("7Dec1200:00A".length);
     }
 
     // day
@@ -30007,7 +30006,7 @@ afterDoW: value = _stripCFWS(value[3 .. value.length]);
     value = _stripCFWS(value[digits .. value.length]);
 
     // month
-    checkLen!"Dec1200:00A"();
+    checkLen("Dec1200:00A".length);
     Month month;
     {
         auto monStr = sliceAsString(value[0 .. 3]);
@@ -30028,7 +30027,7 @@ afterMon: value = _stripCFWS(value[3 .. value.length]);
     }
 
     // year
-    checkLen!"1200:00A"();
+    checkLen("1200:00A".length);
     auto found = value[2 .. value.length].find!(not!(std.ascii.isDigit))();
     size_t yearLen = value.length - found.length;
     if(found[0] == ':')
@@ -30053,31 +30052,31 @@ afterMon: value = _stripCFWS(value[3 .. value.length]);
     value = _stripCFWS(value[yearLen .. value.length]);
 
     // hour
-    checkLen!"00:00A"();
+    checkLen("00:00A".length);
     immutable hour = _convDigits!short(value[0 .. 2]);
     value = _stripCFWS(value[2 .. value.length]);
     if(value[0] != ':')
         throw new DateTimeException("Invalid hour");
     value = _stripCFWS(value[1 .. value.length]);
-    checkLen!"00A"();
+    checkLen("00A".length);
 
     // minute
     immutable minute = _convDigits!short(value[0 .. 2]);
     value = _stripCFWS(value[2 .. value.length]);
 
     // second
-    checkLen!"A"();
+    checkLen("A".length);
     short second;
     if(value[0] == ':')
     {
         value = _stripCFWS(value[1 .. value.length]);
-        checkLen!"00A"();
+        checkLen("00A".length);
         second = _convDigits!short(value[0 .. 2]);
         // this is just if/until SysTime is sorted out to fully support leap seconds
         if(second == 60)
             second = 59;
         value = _stripCFWS(value[2 .. value.length]);
-        checkLen!"A"();
+        checkLen("A".length);
     }
 
     immutable(TimeZone) parseTZ(int sign)
