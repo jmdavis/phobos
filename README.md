@@ -1,5 +1,6 @@
 ![D Logo](http://dlang.org/images/dlogo.png) Phobos Standard Library
 ===================================================================
+[![Gitter](https://badges.gitter.im/Join Chat.svg)](https://gitter.im/jmdavis/phobos?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Phobos is the standard library that comes with the
 [D Programming Language](http://dlang.org) Compiler.
