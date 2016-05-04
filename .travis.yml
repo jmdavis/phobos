@@ -4,7 +4,7 @@ language: d
 d: dmd-2.071.0
 install:
  - wget "https://raw.githubusercontent.com/dlang/dmd/master/src/checkwhitespace.d" -O ../checkwhitespace.d
- - wget -q -O dscanner "http://releases.dlang.io/dscanner/0.3.0-git/dscanner"
+ - wget -q -O dscanner "http://releases.dlang.io/dscanner/0.4.0-alpha/dscanner"
  - chmod +x dscanner
 script:
  - (cd .. && rdmd ./checkwhitespace.d $(find phobos -name '*.d'))
